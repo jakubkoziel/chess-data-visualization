@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org/">
+<head>
+    <meta charset="UTF-8">
+    <title>Chess Data Explorer</title>
+    <link rel="stylesheet"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+</head>
+<body>
+
+<div th:replace="~{fragments/navigation :: navigation}">
+
+</div>
+
+
+<main role="main" class="flex-shrink-0">
+    <div class="container mt-5">
+        <div class="jumbotron">
+            <h1 class="display-4">Welcome to our application!</h1>
+            <p class="lead">This app is made for chess data analysis. Each tab consist of different set of tools to perform data analysis. </p>
+            <p class="lead">By interacting with our visualizations you can find out something interesting about users of <a href="https://lichess.org/"> lichess.org</a>, moreover, you can improve your own chess skills.</p>
+        </div>
+    </div>
+</main>
+
+
+<script
+        src="http://code.jquery.com/jquery-3.5.1.slim.js"
+        integrity="sha256-DrT5NfxfbHvMHux31Lkhxg42LY6of8TaYyK50jnxRnM="
+        crossorigin="anonymous">
+</script>
+
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js">
+</script>
+
+</body>
+</html>

@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org/">
+<head>
+    <meta charset="UTF-8">
+    <title>Chess Data Explorer</title>
+    <link rel="stylesheet"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script
+            src="http://code.jquery.com/jquery-3.5.1.slim.js"
+            integrity="sha256-DrT5NfxfbHvMHux31Lkhxg42LY6of8TaYyK50jnxRnM="
+            crossorigin="anonymous">
+    </script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>
+
+    <title>Evaluation of a position</title>
+
+    <script> const colors = ["#290a55", "#eb75a3", "#c3caff"] </script>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        /* Create two unequal columns that floats next to each other */
+        .column {
+            float: left;
+            padding: 10px;
+        }
+
+        .left {
+            width: 860px;
+        }
+
+        .middle {
+            width: 5%;
+        }
+
+        .right {
+            width: 37%;
+        }
+
+        /* Clear floats after the columns */
+        .row:after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+
+        table.list {
+            width: 95%;
+            border: 2px solid #343a40;
+        }
+
+        table.list th {
+            background: #ffffff repeat-x;
+            border-bottom: 1px solid #dfdfdf;
+            height: 30px;
+            padding: 3px;
+            text-align: left;
+        }
+
+        table.list td {
+            height: 28px;
+            padding: 3px;
+            border-bottom: 1px solid #dfdfdf;
+            border-top: 1px solid #FFF;
+        }
+
+        table.list td a {
+            color: #000;
+            outline: none;
+        }
+        table.list a:link {
+            border-bottom: none;
+        }
+        table.list a.visited:hover {
+            border-bottom: 2px dotted #0063A9;
+        }
+        table.list tr {
+            background: #ffffff;
+            cursor: pointer;
+        }
+
+        table.list tr:hover  {
+            background-color:#CCCCCC;
+        }
+    </style>
+</head>
+<body>
+
+<div th:replace="~{fragments/navigation :: navigation}">
+
+</div>
+
+
+<!--<main role="main" class="flex-shrink-0">
+    <div class="container mt-5">
+        <div class="jumbotron">
+            <h4 class="display-4">Visualization of best moves for each position displayed</h4>
+        </div>
+    </div>
+</main>-->
+
+
+<div class="row">
+    <div class="column left">
+        <p style="display: none;">
+            <img id="image" src="https://www.chess.com/dynboard?fen=rnbqkbnr%2Fpppppppp%2F8%2F8%2F4P3%2F8%2FPPPP1PPP%2FRNBQKBNR%20b%20KQkq%20e3%200%201&board=light&piece=glass&size=3&fbclid=IwAR1ngdTQjxjtyy-7O9B502fvkLRxHRH_X57eW-mV0BuQnZ2iXl3egQ1Xk_s.jpg"/>
+        </p>
+        <canvas id="imageCanvas" width="850" height="850"></canvas>
+
+        <script th:inline="javascript">
+            /*<![CDATA[*/
+            window.onload = function() {
+                draw_moves([[${evaluationData.first_moves}]])
+            }
+
+            function draw_moves(list_of_moves) {
+                const board_size = 840;
+                const c = document.getElementById("imageCanvas");
+                const ctx = c.getContext("2d");
+                const img = document.getElementById("image");
+
+                ctx.drawImage(img, 10, 0, board_size, board_size);
+                ctx.lineWidth = 5;
+                ctx.globalAlpha = 0.8;
+                let index;
+                for (index = 0; index < list_of_moves.length; ++index) {
+                    const move = list_of_moves[index];
+                    const a_1 = move.charCodeAt(0) - 97;
+                    const a_2 = 8 - Math.floor(move.charAt(1));
+                    const b_1 = move.charCodeAt(2) - 97;
+                    const b_2 = 8 - Math.floor(move.charAt(3));
+                    const fromx = (160+(2*a_1+1)*board_size)/16;
+                    const fromy = (160+(2*a_2+1)*board_size)/16;
+                    let tox = (160+(2*b_1+1)*board_size)/16;
+                    let toy = (160+(2*b_2+1)*board_size)/16;
+                    const width = 22;
+                    const headlen = 10;
+                    const angle = Math.atan2(toy-fromy,tox-fromx);
+
+                    // This makes it so the end of the arrow head is located at tox, toy, don't ask where 1.15 comes from
+                    tox -= Math.cos(angle) * ((width*1.15));
+                    toy -= Math.sin(angle) * ((width*1.15));
+
+                    //starting path of the arrow from the start square to the end square and drawing the stroke
+                    ctx.beginPath();
+                    ctx.moveTo(fromx, fromy);
+                    ctx.lineTo(tox, toy);
+                    ctx.strokeStyle = colors[index];
+                    ctx.lineWidth = width;
+                    ctx.stroke();
+
+                    //starting a new path from the head of the arrow to one of the sides of the point
+                    ctx.beginPath();
+                    ctx.moveTo(tox, toy);
+                    ctx.lineTo(tox-headlen*Math.cos(angle-Math.PI/7),toy-headlen*Math.sin(angle-Math.PI/7));
+
+                    //path from the side point of the arrow, to the other side point
+                    ctx.lineTo(tox-headlen*Math.cos(angle+Math.PI/7),toy-headlen*Math.sin(angle+Math.PI/7));
+
+                    //path from the side point back to the tip of the arrow, and then again to the opposite side point
+                    ctx.lineTo(tox, toy);
+                    ctx.lineTo(tox-headlen*Math.cos(angle-Math.PI/7),toy-headlen*Math.sin(angle-Math.PI/7));
+
+                    //draws the paths created above
+                    ctx.strokeStyle = colors[index];
+                    ctx.lineWidth = width;
+                    ctx.stroke();
+                    ctx.fillStyle = colors[index];
+                    ctx.fill();
+                }
+            }
+            /*]]>*/
+        </script>
+    </div>
+    <div class="column middle">
+        <table class="list" border="0" cellspacing="0" cellpadding="0">
+            <tbody>
+            <tr>
+                <td id="cpline1" style="height: 435px; padding-top: 15px; background-color: #202020; color: #f8f8f8;
+                vertical-align: text-top; font-size: 20px; text-align: center">
+                    [[${evaluationData.cp[0]}]]
+                </td>
+            </tr>
+            <tr>
+                <td id="cpline2" style="height: 400px; padding-top: 15px; background-color: #f8f8f8; color: #f8f8f8">.</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="column right" >
+        <table class="list" border="0" cellspacing="0" cellpadding="0">
+            <tbody>
+            <tr>
+                <th width="7%" style="background-color: #343a40; color:#9b9b9b"></th>
+                <th width="73%" style="background-color: #343a40; color:#9B9B9B">Sequence of moves</th>
+                <th width="20%" style="background-color: #343a40; color:#9B9B9B">CP</th>
+            </tr>
+            <tr class='js-clickable0'>
+                <td style="padding-top: 15px; background-color: #290a55; color: #290a55">.</td>
+                <td>[[${evaluationData.move_sequence[0]}]]</td>
+                <td>[[${evaluationData.cp[0]}]]</td>
+            </tr>
+            <tr class='js-clickable1'>
+                <td style="padding-top: 15px; background-color: #eb75a3; color: #eb75a3">.</td>
+                <td>[[${evaluationData.move_sequence[1]}]]</td>
+                <td>[[${evaluationData.cp[1]}]]</td>
+            </tr>
+            <tr class='js-clickable2'>
+                <td style="padding-top: 15px; background-color: #c3caff; color: #c3caff">.</td>
+                <td>[[${evaluationData.move_sequence[2]}]]</td>
+                <td>[[${evaluationData.cp[2]}]]</td>
+            </tr>
+            </tbody>
+        </table>
+        <br>
+        <div style="text-align:center">
+            <form action="#" th:action="@{/evaluation}" th:object="${move}" method="post">
+                <p>Input move:</p>
+                <p><input type="text" th:field="*{move}" /></p>
+                <p><input type="submit" value="Submit" /></p>
+                <p><img class='resetowanie' width="70px" src="https://cdn.discordapp.com/attachments/789594780170190878/803831039737724938/unknown.png"/></p>
+            </form>
+        </div>
+        <main role="main" class="flex-shrink-0">
+            <div class="container mt-5">
+                <div class="jumbotron">
+                    <p class="lead">This tab shows the best moves proposed by engine (depth = 20-51). The values are cached in the lichess database. </p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        $('.resetowanie').on('click', function() {
+            $.ajax({
+                type: "POST",
+                dataType : 'json',
+                url: "evaluation",
+                data: {"resetowanie":"true"}, // Note it is important
+                error: function(){
+                    location.reload()
+                }
+            });
+        });
+        $('.js-clickable0').on('click', function() {
+            $.ajax({
+                type: "POST",
+                dataType : 'json',
+                url: "evaluation",
+                data: {"ruch":"[[${evaluationData.first_moves[0]}]]"}, // Note it is important
+                error: function(){
+                    location.reload()
+                }
+            });
+        });
+        $('.js-clickable1').on('click', function() {
+            $.ajax({
+                type: "POST",
+                dataType : 'json',
+                url: "evaluation",
+                data: {"ruch":"[[${evaluationData.first_moves[1]}]]"}, // Note it is important
+                error: function(){
+                    location.reload()
+                }
+            });
+        });
+        $('.js-clickable2').on('click', function() {
+            $.ajax({
+                type: "POST",
+                dataType : 'json',
+                url: "evaluation",
+                data: {"ruch":"[[${evaluationData.first_moves[2]}]]"}, // Note it is important
+                error: function(){
+                    location.reload()
+                }
+            });
+        });
+    </script>
+</div>
+
+
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    let beginning = "https://www.chess.com/dynboard?fen=";
+    let ending = "&board=light&piece=glass&size=3&fbclid=IwAR1ngdTQjxjtyy-7O9B502fvkLRxHRH_X57eW-mV0BuQnZ2iXl3egQ1Xk_s.jpg";
+    let link = beginning + [[${fenPosition.FENPosition}]] + ending;
+    let white_height = [[${evaluationData.white_height}]]
+    let black_height = [[${evaluationData.black_height}]]
+
+    document.getElementById("image").src = link;
+    document.getElementById("cpline1").style.height = black_height;
+    document.getElementById("cpline2").style.height = white_height;
+    /*]]>*/
+</script>
+
+
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js">
+</script>
+
+</body>
+</html>

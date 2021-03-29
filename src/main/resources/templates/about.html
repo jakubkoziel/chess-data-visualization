@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org/">
+<head>
+    <meta charset="UTF-8">
+    <title>About</title>
+    <link rel="stylesheet"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+</head>
+<body>
+
+<div th:replace="~{fragments/navigation :: navigation}">
+
+</div>
+
+
+<main role="main" class="flex-shrink-0">
+    <div class="container mt-5">
+        <div class="jumbotron">
+            <h1 class="display-4">About us</h1>
+            <h4 class="display-7">Who are we?</h4>
+            <h4 class="display-7">Our team consists of three students: Jakub Kozieł, Tomasz Krupiński and Jakub Lis. We are studying Data Science at MiNI faculty.</h4>
+        </div>
+        <div class="jumbotron">
+            <h1 class="display-4">About project</h1>
+            <h4 class="display-7">Our application is designed to perform chess data analysis. Interacting with our application can can not only help in studying chess, but also can encourage to self-development in chess area.</h4>
+            <h4 class="display-7">Data used in our project comes from <a href="https://lichess.org/api"> https://lichess.org/api</a></h4>
+        </div>
+    </div>
+</main>
+
+
+<script
+        src="http://code.jquery.com/jquery-3.5.1.slim.js"
+        integrity="sha256-DrT5NfxfbHvMHux31Lkhxg42LY6of8TaYyK50jnxRnM="
+        crossorigin="anonymous">
+</script>
+
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js">
+</script>
+
+</body>
+</html>

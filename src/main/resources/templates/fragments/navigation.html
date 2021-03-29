@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark" th:fragment="navigation">
+    <div class="container-fluid">
+        <a class="navbar-brand" th:href="@{/}">Home</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav">
+                <li th:class="${activePage == 'bestMoves'} ? 'nav-item active' : 'nav-item'"> <!-- Error is shown, however, it works as intended. Probably can be easily fixed and it might be but it is not worth to do tag-->
+                    <a class="nav-link" th:href="@{/best-moves}">Best moves</a>
+                </li>
+                <li th:class="${activePage == 'bestMastersMoves'} ? 'nav-item active' : 'nav-item'"> <!-- Error is shown, however, it works as intended. Probably can be easily fixed and it might be but it is not worth to do tag-->
+                    <a class="nav-link" th:href="@{/Masters-moves}">Best masters moves</a>
+                </li>
+                <li th:class="${activePage == 'evaluation'} ? 'nav-item active' : 'nav-item'"> <!-- Error is shown, however, it works as intended. Probably can be easily fixed and it might be but it is not worth to do tag-->
+                    <a class="nav-link" th:href="@{/evaluation}">Evaluation of a position</a>
+                </li>
+                <li th:class="${activePage == 'playerHistory'} ? 'nav-item active' : 'nav-item'">
+                    <a class="nav-link" th:href="@{/player-history}">Player history</a>
+                </li>
+                <li th:class="${activePage == 'topPlayers'} ? 'nav-item active' : 'nav-item'">
+                    <a class="nav-link" th:href="@{/top-players}">Top players</a>
+                </li>
+                <li th:class="${activePage == 'about'} ? 'nav-item active' : 'nav-item'">
+                    <a class="nav-link" th:href="@{/about}">About</a>
+                </li>
+            </div>
+        </div>
+    </div>
+</nav>
+</body>
+</html>

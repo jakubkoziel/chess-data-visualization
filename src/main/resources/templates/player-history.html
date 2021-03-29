@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org/">
+<head>
+    <meta charset="UTF-8">
+    <title>Chess Data Explorer</title>
+    <link rel="stylesheet"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <title>Player history</title>
+
+
+</head>
+<body>
+
+<div th:replace="~{fragments/navigation :: navigation}">
+
+</div>
+
+<br>
+<div style="text-align:center;">
+    <form action="#" th:action="@{/player-history}" th:object="${nickname}" method="post">
+        <p>Lichess user nickname: <input type="text" th:field="*{nickname}" /></p>
+        <p><input type="submit" value="Submit" /></p>
+    </form>
+</div>
+
+
+
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.7.0/moment.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script>
+
+
+
+
+
+<script
+        src="http://code.jquery.com/jquery-3.5.1.slim.js"
+        integrity="sha256-DrT5NfxfbHvMHux31Lkhxg42LY6of8TaYyK50jnxRnM="
+        crossorigin="anonymous">
+</script>
+
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js">
+</script>
+
+
+
+
+</body>
+</html>
